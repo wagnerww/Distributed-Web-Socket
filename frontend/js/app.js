@@ -1,11 +1,11 @@
 const stompClient = new StompJs.Client({
-    brokerURL: 'ws://localhost:8080/ws'
+    brokerURL: 'ws://localhost/ws'
 });
 
 stompClient.onConnect = (frame) => {
     setConnected(true);
     console.log('Connected: ' + frame);
-    stompClient.subscribe('/topic/greetings', (greeting) => {
+    stompClient.subscribe('/topic/messages', (greeting) => {
         showGreeting(JSON.parse(greeting.body).content);
     });
 };
@@ -41,11 +41,13 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function sendName() {
+function sendMessage() {
     stompClient.publish({
-        destination: "/app/hello",
-        body: JSON.stringify({'name': $("#name").val()})
+        destination: "/topic/messages",
+        body: JSON.stringify({'content': $("#message").val()})
     });
+
+    $("#message").val("");
 }
 
 function showGreeting(message) {
@@ -56,5 +58,5 @@ $(function () {
     $("form").on('submit', (e) => e.preventDefault());
     $( "#connect" ).click(() => connect());
     $( "#disconnect" ).click(() => disconnect());
-    $( "#send" ).click(() => sendName());
+    $( "#send" ).click(() => sendMessage());
 });

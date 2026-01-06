@@ -13,8 +13,9 @@ public class ForumController {
 
     @MessageMapping("/forum")
     @SendTo("/topic/messages")
-    public void sendMessage(String forumMessage) {
-        System.out.println("Received message: " + forumMessage);
+    public ForumMessage sendMessage(@Payload ForumMessage forumMessage) {
+        System.out.println("Received message: " + forumMessage.getContent());
+        return forumMessage;
     }
     
 }
